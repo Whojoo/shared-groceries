@@ -1,8 +1,7 @@
 ﻿namespace SharedGrocery.Models
 {
-    public class User
+    public class User : AbstractEntity
     {
-        public int Id { get; set; }
         public string Token { get; set; }
     }
 }
