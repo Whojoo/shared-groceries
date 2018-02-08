@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SharedGrocery.Models;
+using SharedGrocery.Repositories;
 
 namespace SharedGrocery.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly IUserRepository _userRepository;
+
+        public ValuesController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] {"value1", "value2"};
+            return new[] {"value1", "value2"};
         }
 
         // GET api/values/5
@@ -27,6 +33,11 @@ namespace SharedGrocery.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            var user = new User
+            {
+                Token = "token"
+            };
+            _userRepository.Save(user);
         }
 
         // PUT api/values/5

@@ -5,33 +5,34 @@ using SharedGrocery.Models;
 
 namespace SharedGrocery.Repositories
 {
-    public abstract class AbstractRepository<TEntity>
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : AbstractEntity
     {
         private readonly DbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        
+        protected DbSet<TEntity> DbSet { get; }
 
-        protected AbstractRepository(DbContext context, DbSet<TEntity> dbSet)
+        protected BaseRepository(DbContext context, DbSet<TEntity> dbSet)
         {
             _context = context;
-            _dbSet = dbSet;
+            DbSet = dbSet;
         }
 
         public TEntity FindOne(int id)
         {
-            return _dbSet.FirstOrDefault(grocery => grocery.Id == id);
+            return DbSet.FirstOrDefault(grocery => grocery.Id == id);
         }
 
         public ICollection<TEntity> FindAll()
         {
-            return _dbSet.ToList();
+            return DbSet.ToList();
         }
 
         public TEntity Save(TEntity entity)
         {
             var exists = FindOne(entity.Id) != null;
-            var entityEntry = exists ? _dbSet.Update(entity) : _dbSet.Add(entity);
-            _context.SaveChanges();
+            var entityEntry = exists ? DbSet.Update(entity) : DbSet.Add(entity);
+            SaveChanges();
             return entityEntry.Entity;
         }
 
@@ -39,9 +40,14 @@ namespace SharedGrocery.Repositories
         {
             if (FindOne(entity.Id) != null)
             {
-                var entityEntry = _dbSet.Remove(entity);
-                _context.SaveChanges();
+                DbSet.Remove(entity);
+                SaveChanges();
             }
+        }
+
+        protected void SaveChanges()
+        {
+            _context.SaveChanges();
         }
     }
 }
