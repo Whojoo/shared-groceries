@@ -2,9 +2,9 @@ version: '3'
 
 services:
   grocery-service:
-    image: shared-grocery/grocery-service:${GROCERY_SERVICE_TAG}
+    image: whojoo/grocery-service:${GROCERY_SERVICE_TAG}
     links:
      - mssql-server
 
   mssql-server:
-    image: shared-grocery/mssql-server:${MSSQL_SERVER_TAG}
+    image: whojoo/grocery-service-mssql:${MSSQL_SERVER_TAG}
