@@ -1,8 +1,10 @@
 version: '3'
 
 services:
-  sharedgrocery:
-    image: sharedgrocery
-    build:
-      context: ./SharedGrocery
-      dockerfile: Dockerfile
+  grocery-service:
+    image: shared-grocery/grocery-service:${GROCERY_SERVICE_TAG}
+    links:
+     - mssql-server
+
+  mssql-server:
+    image: shared-grocery/mssql-server:${MSSQL_SERVER_TAG}

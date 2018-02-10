@@ -6,7 +6,7 @@
     <ProjectGuid>{1531967F-9532-4107-9EE0-2153A17F3327}</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
     <DockerServiceUrl>http://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>sharedgrocery</DockerServiceName>
+    <DockerServiceName>grocery-service</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.ci.build.yml" />
