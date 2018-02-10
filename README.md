@@ -1,15 +1,26 @@
 # shared-groceries_grocery-service
 
 ## TODO
+
+- Create databases of sql server in build script
+- Fix for Visual Studio (for Mac)
 - Allow remote debugging docker image
 
-## Build
-```
-cd SharedGrocery
-docker build -t shared-groceries/grocery-service .
+## Build&Run
+
+```bash
+docker-compose build
+docker-compose up -d
 ```
 
-## Run without Docker
+To see and follow the logs of a service `docker-compose logs -t -f grocery-service`
+
+## Run without Docker (for debugging)
+
+Running docker-compose in Visual Studio for Mac does currently not work, therefore debugging should be done without docker.
+
+Either host your own sql server (see below) or run `docker-compose start mssql-server`
+
 Make sure an sql server is running with the following parameters:
 
 | Parameter | Value     |
@@ -20,8 +31,10 @@ Make sure an sql server is running with the following parameters:
 | Password  | Passw0rd  |
 
 Make sure it is up to date.
-```
+
+```bash
 cd SharedGrocery
 dotnet ef database update
 ```
-Then run like you normally would, keep in mind the port it listens to. Default is 5000 while through docker is 80 (forwarded to 8080)
+
+Then run like you normally would, keep in mind the port it listens to. Default is 5000 while through docker is 80 (forwarded to 8000)
