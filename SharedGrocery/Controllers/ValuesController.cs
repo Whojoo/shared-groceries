@@ -8,11 +8,8 @@ namespace SharedGrocery.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private readonly IUserRepository _userRepository;
-
-        public ValuesController(IUserRepository userRepository)
+        public ValuesController()
         {
-            _userRepository = userRepository;
         }
 
         // GET api/values
@@ -33,11 +30,6 @@ namespace SharedGrocery.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
-            var user = new User
-            {
-                Token = "token"
-            };
-            _userRepository.Save(user);
         }
 
         // PUT api/values/5
