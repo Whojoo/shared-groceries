@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using SharedGrocery.Models.Joins;
-
-namespace SharedGrocery.Models
+﻿namespace SharedGrocery.Models
 {
     public class Grocery : AbstractEntity
     {
-        public string Name { get; set; }
-        public ICollection<GroceryListGrocery> GroceryListGroceries { get; } = new List<GroceryListGrocery>();
+        public int Quantity { get; set; }
+        public Item Item { get; set; }
     }
 }
