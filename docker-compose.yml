@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  sharedgrocery:
+    image: sharedgrocery
+    build:
+      context: ./SharedGrocery
+      dockerfile: Dockerfile
