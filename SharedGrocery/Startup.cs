@@ -56,13 +56,16 @@ namespace SharedGrocery
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, GroceryDataContext groceryDataContext)
         {
             _logger?.LogDebug("Configuring app");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            _logger?.LogDebug("Starting database migration");
+            groceryDataContext.Database.Migrate();
 
             app.UseMvc();
         }

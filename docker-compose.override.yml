@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - CONNSTR_DefaultConnection=Data Source=localhost,1433;Initial Catalog=groceries;Integrated Security=False;User ID=sa;Password=Passw0rd
+      - ConnectionStrings:Groceries=Data Source=mssql-server,1433;Initial Catalog=groceries;Integrated Security=False;User ID=sa;Password=Passw0rd
     ports:
       - "8000:80"
 

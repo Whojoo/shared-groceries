@@ -9,9 +9,10 @@ using System;
 namespace SharedGrocery.Migrations
 {
     [DbContext(typeof(GroceryDataContext))]
-    partial class GroceryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20180210151237_AddItem")]
+    partial class AddItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")
