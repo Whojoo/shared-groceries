@@ -2,7 +2,7 @@
 
 ## TODO
 
-- Create databases of sql server in build script
+- Create database user with sql startup
 - Fix for Visual Studio (for Mac)
 - Allow remote debugging docker image
 

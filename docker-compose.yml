@@ -8,3 +8,8 @@ services:
 
   mssql-server:
     image: whojoo/grocery-service-mssql:${MSSQL_SERVER_TAG}
+    volumes:
+      - mssql-data:/var/lib/db
+
+volumes:
+  mssql-data:
