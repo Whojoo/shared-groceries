@@ -15,10 +15,9 @@ namespace SharedGrocery
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
-        private readonly ILoggerFactory _loggerFactory;
         private ILogger<Startup> _logger;
 
-        public Startup(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
+        public Startup(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
@@ -27,7 +26,6 @@ namespace SharedGrocery
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
-            _loggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -36,9 +34,10 @@ namespace SharedGrocery
         // ReSharper disable once UnusedMember.Global
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            _loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            _loggerFactory.AddDebug(LogLevel.Debug);
-            _logger = _loggerFactory.CreateLogger<Startup>();
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug(LogLevel.Debug);
+            _logger = loggerFactory.CreateLogger<Startup>();
             
             services.AddMvc();
             services.AddEntityFrameworkNpgsql()
@@ -52,6 +51,7 @@ namespace SharedGrocery
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
+            containerBuilder.RegisterInstance(loggerFactory).As<LoggerFactory>();
             
             containerBuilder.Populate(services);
 

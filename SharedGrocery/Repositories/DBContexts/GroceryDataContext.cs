@@ -9,7 +9,7 @@ namespace SharedGrocery.Repositories.DBContexts
         public DbSet<GroceryList> GroceryLists { get; set; }
         public DbSet<Item> Items { get; set; }
 
-        public GroceryDataContext(DbContextOptions options) : base(options)
+        public GroceryDataContext(DbContextOptions<GroceryDataContext> options) : base(options)
         {
         }
     }

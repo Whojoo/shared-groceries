@@ -7,7 +7,7 @@ namespace SharedGrocery.Repositories.DBContexts
     {
         public DbSet<User> Users { get; set; }
 
-        public UaaContext(DbContextOptions options) : base(options)
+        public UaaContext(DbContextOptions<UaaContext> options) : base(options)
         {
         }
     }
