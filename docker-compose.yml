@@ -5,11 +5,18 @@ services:
     image: whojoo/grocery-service:${GROCERY_SERVICE_TAG}
     links:
      - mssql-server
+     - uaa-mssql
 
   mssql-server:
     image: whojoo/grocery-service-mssql:${MSSQL_SERVER_TAG}
     volumes:
       - mssql-data:/var/lib/db
 
+  uaa-mssql:
+    image: whojoo/uaa-mssql:${UAA_MSSQL_TAG}
+    volumes:
+      - mssql-uaa-data:/var/lib/db
+
 volumes:
   mssql-data:
+  mssql-uaa-data:
