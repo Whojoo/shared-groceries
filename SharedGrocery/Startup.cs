@@ -41,8 +41,9 @@ namespace SharedGrocery
             _logger = _loggerFactory.CreateLogger<Startup>();
             
             services.AddMvc();
-            services.AddDbContext<GroceryDataContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Groceries")));
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<GroceryDataContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
 
             var containerBuilder = new ContainerBuilder();
 

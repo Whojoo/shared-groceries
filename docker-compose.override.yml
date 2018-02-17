@@ -7,30 +7,31 @@ services:
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:Groceries=Data Source=mssql-server,1433;Initial Catalog=groceries;Integrated Security=False;User ID=sa;Password=Passw0rd
-      - ConnectionStrings:Uaa=Data Source=uaa-mssql,1433;Initial Catalog=uaa;Integrated Security=False;User ID=sa;Password=Passw0rd
+      - ConnectionStrings:Groceries=Data Source=grocery-data,1433;Initial Catalog=groceries;Integrated Security=False;User ID=sa;Password=Passw0rd
+      - ConnectionStrings:Uaa=Data Source=uaa-data,1433;Initial Catalog=uaa;Integrated Security=False;User ID=sa;Password=Passw0rd
     ports:
       - "8000:80"
-
-  mssql-server:
+  
+  grocery-data:
     build:
-      context: ./mssql-server
+      context: ./postgres-server
       dockerfile: Dockerfile
-    environment:
-      - SA_PASSWORD=Passw0rd
-      - MSSQL_PID=Developer
-      - ACCEPT_EULA=Y
+    restart: always
     ports:
-      - "1433:1433"
-
-  uaa-mssql:
+      - "5432:5432"
+    environment: 
+      - POSTGRES_PASSWORD=Passw0rd
+      - POSTGRES_USER=dbuser
+      - POSTGRES_DB=groceries
+  
+  uaa-data:
     build:
-      context: ./mssql-server
+      context: ./postgres-server
       dockerfile: Dockerfile
-    environment:
-      - SA_PASSWORD=Passw0rd
-      - MSSQL_PID=Developer
-      - ACCEPT_EULA=Y
+    restart: always
     ports:
-      - "1434:1433"
-
+      - "5433:5432"
+    environment: 
+      - POSTGRES_PASSWORD=Passw0rd
+      - POSTGRES_USER=dbuser
+      - POSTGRES_DB=uaa

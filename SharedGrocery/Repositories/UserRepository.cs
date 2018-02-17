@@ -5,7 +5,7 @@ namespace SharedGrocery.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(GroceryDataContext context) : base(context, context.Users)
+        public UserRepository(UaaContext context) : base(context, context.Users)
         {
         }
     }
