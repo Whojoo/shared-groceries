@@ -4,7 +4,7 @@ namespace SharedGrocery.Models
 {
     public class GroceryList : AbstractEntity
     {
-        public User Owner { get; set; }
+        public int OwnerId { get; set; }
         public ICollection<Grocery> Groceries { get; } = new List<Grocery>();
     }
 }

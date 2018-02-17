@@ -43,7 +43,11 @@ namespace SharedGrocery
             services.AddMvc();
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GroceryDataContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
+                    opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
+
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<UaaContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("Uaa")));
 
             var containerBuilder = new ContainerBuilder();
 
@@ -57,7 +61,8 @@ namespace SharedGrocery
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, GroceryDataContext groceryDataContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, GroceryDataContext groceryDataContext,
+            UaaContext uaaContext)
         {
             _logger?.LogDebug("Configuring app");
             if (env.IsDevelopment())
@@ -67,6 +72,7 @@ namespace SharedGrocery
             
             _logger?.LogDebug("Starting database migration");
             groceryDataContext.Database.Migrate();
+            uaaContext.Database.Migrate();
 
             app.UseMvc();
         }
