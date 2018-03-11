@@ -2,39 +2,39 @@
 
 ## TODO
 
-- Create database user with sql startup
-- Fix for Visual Studio (for Mac)
 - Allow remote debugging docker image
+- Google authentication check for all requests
+- Actually creating the planned application
 
 ## Build&Run
 
 ```bash
-docker-compose build
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 To see and follow the logs of a service `docker-compose logs -t -f grocery-service`
 
 ## Run without Docker (for debugging)
 
-Running docker-compose in Visual Studio for Mac does currently not work, therefore debugging should be done without docker.
+Debugging a docker contrainer currently doesn't work, so debugging is done without running the application in docker.
 
-Either host your own sql server (see below) or run `docker-compose start mssql-server`
+Either host your own postgres server (see below) or run `docker-compose up -d --build grocery-data`
 
-Make sure an sql server is running with the following parameters:
+Make sure an postgres server is running with the following parameters:
 
 | Parameter | Value     |
 | --------- | --------- |
 | Server    | localhost |
-| Port      | 1433      |
-| User Id   | sa        |
+| Port      | 5432      |
+| User Id   | dbuser    |
 | Password  | Passw0rd  |
 
-Make sure it is up to date.
+## Environment variables for local debugging
 
-```bash
-cd SharedGrocery
-dotnet ef database update
-```
+The application and the android app expect the following values:
 
-Then run like you normally would, keep in mind the port it listens to. Default is 5000 while through docker is 80 (forwarded to 8000)
+| Parameter              | Default value         |
+| ---------------------- | --------------------- |
+| ASPNETCORE_ENVIRONMENT | Development           |
+| ASPNETCORE_URLS        | http://localhost:8000 |
+| GOOGLE_CLIENT_ID       | Yea nice try          |

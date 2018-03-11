@@ -2,6 +2,5 @@
 {
     public interface IUserService
     {
-        void ValidateGoogleToken(string token);
     }
 }

@@ -5,18 +5,11 @@ services:
     image: whojoo/grocery-service:${GROCERY_SERVICE_TAG}
     links:
      - grocery-data
-     - uaa-data
   
   grocery-data:
     image: whojoo/grocery-data-postgres:${GROCERY_DATA_POSTGRES_TAG}
     volumes:
       - grocery-data:/var/lib/postgres/db
-  
-  uaa-data:
-    image: whojoo/uaa-data-postgres:${UAA_DATA_POSTGRES_TAG}
-    volumes:
-      - uaa-data:/var/lib/postgres/db
 
 volumes:
   grocery-data:
-  uaa-data:

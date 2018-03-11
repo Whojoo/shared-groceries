@@ -2,12 +2,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SharedGrocery.Repositories;
 using SharedGrocery.Repositories.DBContexts;
 using SharedGrocery.Services;
 
@@ -34,15 +32,11 @@ namespace SharedGrocery
                 .AddDbContext<GroceryDataContext>(opt =>
                     opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
 
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<UaaContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("Uaa")));
-
             var containerBuilder = new ContainerBuilder();
             
             containerBuilder.Populate(services);
-            containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
             containerBuilder.RegisterType<UserService>().As<IUserService>();
+            containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
             
             var loggingFactory = new LoggerFactory();
             loggingFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -55,14 +49,12 @@ namespace SharedGrocery
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, GroceryDataContext groceryDataContext,
-            UaaContext uaaContext, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, GroceryDataContext groceryDataContext, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<Startup>();
             
             _logger?.LogDebug("Starting database migration");
             groceryDataContext.Database.Migrate();
-            uaaContext.Database.Migrate();
 
             app.UseMvc();
         }
