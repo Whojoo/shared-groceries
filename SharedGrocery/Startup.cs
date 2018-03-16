@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SharedGrocery.Repositories.DBContexts;
-using SharedGrocery.Services;
+using SharedGrocery.GroceryService.Repository.DBContexts;
+using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery
 {
