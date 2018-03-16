@@ -1,17 +1,15 @@
 ﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
-namespace SharedGrocery.Repositories.DBContexts
+namespace SharedGrocery.Uaa.Repository.DBContext
 {
-    // ReSharper disable once UnusedMember.Global
-    public class GroceryDataContextProvider : IDesignTimeDbContextFactory<GroceryDataContext>
+    public class UaaContextProvider : IDesignTimeDbContextFactory<UaaContext>
     {
         private readonly IConfiguration _configuration;
         
-        public GroceryDataContextProvider()
+        public UaaContextProvider()
         {
             var builder = new ConfigurationBuilder()
                 // ReSharper disable once PossibleNullReferenceException
@@ -24,11 +22,11 @@ namespace SharedGrocery.Repositories.DBContexts
             _configuration = builder.Build();
         }
 
-        public GroceryDataContext CreateDbContext(string[] args)
+        public UaaContext CreateDbContext(string[] args)
         {
-            var options = new DbContextOptionsBuilder<GroceryDataContext>();
-            options.UseNpgsql(_configuration.GetConnectionString("Groceries"));
-            return new GroceryDataContext(options.Options);
+            var options = new DbContextOptionsBuilder<UaaContext>();
+            options.UseNpgsql(_configuration.GetConnectionString("Uaa"));
+            return new UaaContext(options.Options);
         }
     }
 }

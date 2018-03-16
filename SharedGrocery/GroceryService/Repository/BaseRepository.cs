@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using SharedGrocery.Models;
+using SharedGrocery.Common.Model;
 
-namespace SharedGrocery.Repositories
+namespace SharedGrocery.GroceryService.Repository
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : AbstractEntity

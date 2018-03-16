@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using SharedGrocery.Repositories;
 
-namespace SharedGrocery.Services
+namespace SharedGrocery.Uaa.Service
 {
     public class UserService : IUserService
     {

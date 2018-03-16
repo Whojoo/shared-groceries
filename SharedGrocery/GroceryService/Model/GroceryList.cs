@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using SharedGrocery.Common.Model;
 
-namespace SharedGrocery.Models
+namespace SharedGrocery.GroceryService.Model
 {
     public class GroceryList : AbstractEntity
     {

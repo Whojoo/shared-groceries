@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using SharedGrocery.Models;
+using SharedGrocery.Common.Model;
 
-namespace SharedGrocery.Repositories
+namespace SharedGrocery.GroceryService.Repository
 {
     public interface IBaseRepository<TEntity> where TEntity : AbstractEntity
     {

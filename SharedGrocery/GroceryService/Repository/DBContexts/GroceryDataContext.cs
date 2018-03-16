@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SharedGrocery.GroceryService.Model;
 using SharedGrocery.Models;
 
-namespace SharedGrocery.Repositories.DBContexts
+namespace SharedGrocery.GroceryService.Repository.DBContexts
 {
     public class GroceryDataContext : DbContext
     {

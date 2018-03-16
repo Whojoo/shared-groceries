@@ -1,4 +1,4 @@
-﻿namespace SharedGrocery.Models
+﻿namespace SharedGrocery.Common.Model
 {
     public abstract class AbstractEntity
     {

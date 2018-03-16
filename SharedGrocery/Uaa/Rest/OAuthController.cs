@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SharedGrocery.Controllers.Filters;
-using SharedGrocery.Services;
+using SharedGrocery.Uaa.Rest.Filters;
+using SharedGrocery.Uaa.Service;
 
-namespace SharedGrocery.Controllers
+namespace SharedGrocery.Uaa.Rest
 {
     [Route("/oauth")]
     [UnauthorizedExceptionFilter]

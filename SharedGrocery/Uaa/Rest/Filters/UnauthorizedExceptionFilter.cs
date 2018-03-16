@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace SharedGrocery.Controllers.Filters
+namespace SharedGrocery.Uaa.Rest.Filters
 {
     public class UnauthorizedExceptionFilter : ExceptionFilterAttribute
     {

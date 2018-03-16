@@ -6,7 +6,7 @@ using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace SharedGrocery.Services
+namespace SharedGrocery.Uaa.Service
 {
     public class AuthenticationService : IAuthenticationService
     {
