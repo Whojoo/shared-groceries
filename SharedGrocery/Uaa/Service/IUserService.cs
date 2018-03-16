@@ -1,4 +1,4 @@
-﻿namespace SharedGrocery.Uaa.Service
+﻿﻿namespace SharedGrocery.Uaa.Service
 {
     public interface IUserService
     {

@@ -1,4 +1,4 @@
-﻿using SharedGrocery.Common.Model;
+﻿﻿using SharedGrocery.Common.Model;
 
 namespace SharedGrocery.GroceryService.Model
 {

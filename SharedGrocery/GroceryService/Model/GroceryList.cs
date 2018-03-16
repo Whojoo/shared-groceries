@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using SharedGrocery.Common.Model;
 
 namespace SharedGrocery.GroceryService.Model
