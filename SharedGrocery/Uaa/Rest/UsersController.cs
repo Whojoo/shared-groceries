@@ -15,6 +15,11 @@ namespace SharedGrocery.Uaa.Rest
             _userService = userService;
         }
 
+        /// <summary>
+        /// Find a user by id
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>User</returns>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {

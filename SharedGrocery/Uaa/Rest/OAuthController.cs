@@ -18,9 +18,13 @@ namespace SharedGrocery.Uaa.Rest
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Login using google token.
+        /// </summary>
+        /// <returns>Jwt for application use</returns>
         [AllowAnonymous]
         [HttpPost("google")]
-        public async Task<IActionResult> GoogleVerify()
+        public async Task<IActionResult> GoogleLogin()
         {
             string authorization = Request.Headers["Authorization"];
             if (authorization == null || !authorization.StartsWith("Bearer "))
