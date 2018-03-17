@@ -20,7 +20,7 @@ namespace SharedGrocery.Uaa.Service
 
         public User GetUser(string tokenId, TokenType tokenType)
         {
-            return _userRepository.findByTokenIdAndTokenType(tokenId, tokenType);
+            return _userRepository.FindByTokenIdAndTokenType(tokenId, tokenType);
         }
 
         public User Save(User user)
