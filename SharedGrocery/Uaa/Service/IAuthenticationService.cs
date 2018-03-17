@@ -9,6 +9,6 @@ namespace SharedGrocery.Uaa.Service
         /// </summary>
         /// <param name="idToken">Google id token</param>
         /// <returns>Jwt token for this application</returns>
-        Task<string> GenerateJwtTokenFromGoogleToken(string idToken);
+        Task<string> GenerateJwtFromGoogleToken(string idToken);
     }
 }

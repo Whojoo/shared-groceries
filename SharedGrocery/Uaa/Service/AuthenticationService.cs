@@ -31,7 +31,7 @@ namespace SharedGrocery.Uaa.Service
             }
         }
 
-        public async Task<string> GenerateJwtTokenFromGoogleToken(string idToken)
+        public async Task<string> GenerateJwtFromGoogleToken(string idToken)
         {
             var payload = await GoogleJsonWebSignature.ValidateAsync(idToken);
             if (!IsPayloadValid(payload))

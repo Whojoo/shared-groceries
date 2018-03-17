@@ -1,10 +1,12 @@
 ﻿﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+ using Microsoft.AspNetCore.Authorization;
+ using Microsoft.AspNetCore.Mvc;
 using SharedGrocery.Uaa.Rest.Filters;
 using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery.Uaa.Rest
 {
+    [Authorize]
     [Route("/oauth")]
     [UnauthorizedExceptionFilter]
     public class OAuthController : Controller
@@ -16,6 +18,7 @@ namespace SharedGrocery.Uaa.Rest
             _authenticationService = authenticationService;
         }
 
+        [AllowAnonymous]
         [HttpPost("google")]
         public async Task<IActionResult> GoogleVerify()
         {
@@ -26,13 +29,13 @@ namespace SharedGrocery.Uaa.Rest
             }
 
             var rawToken = authorization.Substring(7);
-            var jwtToken = await _authenticationService.GenerateJwtTokenFromGoogleToken(rawToken);
+            var jwt = await _authenticationService.GenerateJwtFromGoogleToken(rawToken);
 
-            if (jwtToken != null)
+            if (jwt != null)
             {
                 return Ok(new
                 {
-                    token = jwtToken
+                    token = jwt
                 });
             }
 
