@@ -6,7 +6,7 @@ using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery.Uaa.Rest
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("/oauth")]
     [UnauthorizedExceptionFilter]
     public class OAuthController : Controller
@@ -22,7 +22,6 @@ namespace SharedGrocery.Uaa.Rest
         /// Login using google token.
         /// </summary>
         /// <returns>Jwt for application use</returns>
-        [AllowAnonymous]
         [HttpPost("google")]
         public async Task<IActionResult> GoogleLogin()
         {
