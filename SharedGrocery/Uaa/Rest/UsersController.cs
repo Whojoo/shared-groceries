@@ -23,7 +23,12 @@ namespace SharedGrocery.Uaa.Rest
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return Ok(_userService.GetUser(id));
+            var user = _userService.GetUser(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
         }
     }
 }
