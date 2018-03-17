@@ -18,9 +18,9 @@ To see and follow the logs of a service `docker-compose logs -t -f grocery-servi
 
 Debugging a docker contrainer currently doesn't work, so debugging is done without running the application in docker.
 
-Either host your own postgres server (see below) or run `docker-compose up -d --build grocery-data`
+Either host your own postgres servers (see below) or run `docker-compose up -d --build grocery-data uaa-data`
 
-Make sure an postgres server is running with the following parameters:
+Make sure postgres servers are running with the following parameters:
 
 | Parameter | Value     |
 | --------- | --------- |
@@ -28,6 +28,15 @@ Make sure an postgres server is running with the following parameters:
 | Port      | 5432      |
 | User Id   | dbuser    |
 | Password  | Passw0rd  |
+| Database  | groceries |
+
+| Parameter | Value     |
+| --------- | --------- |
+| Server    | localhost |
+| Port      | 5433      |
+| User Id   | dbuser    |
+| Password  | Passw0rd  |
+| Database  | uaa       |
 
 ## Environment variables for local debugging
 
