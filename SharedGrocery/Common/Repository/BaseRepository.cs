@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedGrocery.Common.Model;
 
@@ -20,7 +21,12 @@ namespace SharedGrocery.Common.Repository
 
         public TEntity FindOne(int id)
         {
-            return DbSet.FirstOrDefault(grocery => grocery.Id == id);
+            return DbSet.Find(id);
+        }
+
+        public Task<TEntity> FindOneAsync(int id)
+        {
+            return DbSet.FindAsync(id);
         }
 
         public ICollection<TEntity> FindAll()

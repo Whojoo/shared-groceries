@@ -5,7 +5,7 @@ namespace SharedGrocery.Uaa.Model
 {
     public class User : AbstractEntity
     {
-        public string Token { get; set; }
+        public string TokenId { get; set; }
         public TokenType TokenType { get; set; }
     }
 }

@@ -1,13 +1,16 @@
 ﻿﻿using System;
-using Autofac;
+ using System.Text;
+ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SharedGrocery.GroceryService.Repository.DBContexts;
-using SharedGrocery.Uaa.Repository.DBContext;
+ using Microsoft.IdentityModel.Tokens;
+ using SharedGrocery.GroceryService.Repository.DBContexts;
+ using SharedGrocery.Uaa.Repository;
+ using SharedGrocery.Uaa.Repository.DBContext;
 using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery
@@ -37,11 +40,28 @@ namespace SharedGrocery
                 .AddDbContext<UaaContext>(opt =>
                     opt.UseNpgsql(Configuration.GetConnectionString("Uaa")));
 
+            services.AddAuthentication()
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "robindegier.nl",
+                        ValidAudience = "robindegier.nl",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["ApiSecret"]))
+                    };
+                });
+
             var containerBuilder = new ContainerBuilder();
             
             containerBuilder.Populate(services);
             containerBuilder.RegisterType<UserService>().As<IUserService>();
             containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+            containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
             
             var loggingFactory = new LoggerFactory();
             loggingFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -62,7 +82,8 @@ namespace SharedGrocery
             _logger?.LogDebug("Starting database migration");
             groceryDataContext.Database.Migrate();
             uaaContext.Database.Migrate();
-            
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

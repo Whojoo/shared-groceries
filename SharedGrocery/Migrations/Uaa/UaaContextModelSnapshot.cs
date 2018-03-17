@@ -26,7 +26,7 @@ namespace SharedGrocery.Migrations.Uaa
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Token");
+                    b.Property<string>("TokenId");
 
                     b.Property<int>("TokenType");
 

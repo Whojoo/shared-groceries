@@ -19,18 +19,21 @@ namespace SharedGrocery.Uaa.Rest
         [HttpPost("google")]
         public async Task<IActionResult> GoogleVerify()
         {
-            string token = Request.Headers["Authorization"];
-            if (token == null || !token.StartsWith("Bearer "))
+            string authorization = Request.Headers["Authorization"];
+            if (authorization == null || !authorization.StartsWith("Bearer "))
             {
                 return Unauthorized();
             }
 
-            var rawToken = token.Substring(7);
-            var success = await _authenticationService.VerifyGoogleIdToken(rawToken);
+            var rawToken = authorization.Substring(7);
+            var jwtToken = await _authenticationService.GenerateJwtTokenFromGoogleToken(rawToken);
 
-            if (success)
+            if (jwtToken != null)
             {
-                return Ok();
+                return Ok(new
+                {
+                    token = jwtToken
+                });
             }
 
             return BadRequest("Token has been altered");

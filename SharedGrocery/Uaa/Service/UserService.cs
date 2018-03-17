@@ -1,4 +1,7 @@
 ﻿﻿using Microsoft.Extensions.Logging;
+ using SharedGrocery.Models;
+ using SharedGrocery.Uaa.Model;
+ using SharedGrocery.Uaa.Repository;
 
 namespace SharedGrocery.Uaa.Service
 {
@@ -6,11 +9,23 @@ namespace SharedGrocery.Uaa.Service
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<UserService> _logger;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(ILogger<UserService> logger, ILoggerFactory loggerFactory)
+        public UserService(ILogger<UserService> logger, ILoggerFactory loggerFactory, IUserRepository userRepository)
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
+            _userRepository = userRepository;
+        }
+
+        public User GetUser(string tokenId, TokenType tokenType)
+        {
+            return _userRepository.findByTokenIdAndTokenType(tokenId, tokenType);
+        }
+
+        public User Save(User user)
+        {
+            return _userRepository.Save(user);
         }
     }
 }
