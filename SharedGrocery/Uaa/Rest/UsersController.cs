@@ -15,7 +15,7 @@ namespace SharedGrocery.Uaa.Rest
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             return Ok(_userService.GetUser(id));
