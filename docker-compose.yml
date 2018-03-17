@@ -4,12 +4,19 @@ services:
   grocery-service:
     image: whojoo/grocery-service:${GROCERY_SERVICE_TAG}
     links:
-     - mssql-server
-
-  mssql-server:
-    image: whojoo/grocery-service-mssql:${MSSQL_SERVER_TAG}
+     - grocery-data
+     - uaa-data
+  
+  grocery-data:
+    image: whojoo/grocery-data-postgres:${GROCERY_DATA_POSTGRES_TAG}
     volumes:
-      - mssql-data:/var/lib/db
+      - grocery-data:/var/lib/postgres/db
+
+  uaa-data:
+    image: whojoo/uaa-data--postgres:${UAA_DATA_POSTGRES_TAG}
+    volumes:
+      - uaa-data:/var/lib/postgres/db
 
 volumes:
-  mssql-data:
+  grocery-data:
+  uaa-data:

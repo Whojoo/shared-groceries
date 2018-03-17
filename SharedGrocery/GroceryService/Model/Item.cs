@@ -1,4 +1,6 @@
-﻿namespace SharedGrocery.Models
+﻿﻿using SharedGrocery.Common.Model;
+
+namespace SharedGrocery.GroceryService.Model
 {
     public class Item : AbstractEntity
     {

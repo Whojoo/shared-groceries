@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using SharedGrocery.Repositories.DBContexts;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
+using SharedGrocery.GroceryService.Repository.DBContexts;
 
 namespace SharedGrocery.Migrations
 {
@@ -13,9 +15,10 @@ namespace SharedGrocery.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("SharedGrocery.Models.Grocery", b =>
                 {
@@ -42,11 +45,9 @@ namespace SharedGrocery.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OwnerId");
+                    b.Property<int>("OwnerId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("GroceryLists");
                 });
@@ -67,18 +68,6 @@ namespace SharedGrocery.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("SharedGrocery.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Token");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("SharedGrocery.Models.Grocery", b =>
                 {
                     b.HasOne("SharedGrocery.Models.GroceryList")
@@ -89,13 +78,7 @@ namespace SharedGrocery.Migrations
                         .WithMany()
                         .HasForeignKey("ItemId");
                 });
-
-            modelBuilder.Entity("SharedGrocery.Models.GroceryList", b =>
-                {
-                    b.HasOne("SharedGrocery.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-                });
+#pragma warning restore 612, 618
         }
     }
 }

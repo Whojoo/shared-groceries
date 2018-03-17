@@ -1,33 +1,29 @@
-﻿using System;
-using Autofac;
+﻿﻿using System;
+ using System.Text;
+ using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+ using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SharedGrocery.Repositories;
-using SharedGrocery.Repositories.DBContexts;
+ using Microsoft.IdentityModel.Tokens;
+ using SharedGrocery.GroceryService.Repository.DBContexts;
+ using SharedGrocery.Uaa.Repository;
+ using SharedGrocery.Uaa.Repository.DBContext;
+using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
-        private readonly ILoggerFactory _loggerFactory;
         private ILogger<Startup> _logger;
 
-        public Startup(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-            _loggerFactory = loggerFactory;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -36,19 +32,46 @@ namespace SharedGrocery
         // ReSharper disable once UnusedMember.Global
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            _loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            _loggerFactory.AddDebug(LogLevel.Debug);
-            _logger = _loggerFactory.CreateLogger<Startup>();
-            
             services.AddMvc();
-            services.AddDbContext<GroceryDataContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Groceries")));
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<GroceryDataContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
+
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<UaaContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("Uaa")));
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "robindegier.nl",
+                        ValidAudience = "robindegier.nl",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["ApiSecret"]))
+                    };
+                });
 
             var containerBuilder = new ContainerBuilder();
-
-            containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
             
             containerBuilder.Populate(services);
+            containerBuilder.RegisterType<UserService>().As<IUserService>();
+            containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+            containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
+            
+            var loggingFactory = new LoggerFactory();
+            loggingFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggingFactory.AddDebug();
+            containerBuilder.RegisterInstance(loggingFactory).As<ILoggerFactory>();
 
             var container = containerBuilder.Build();
             return container.Resolve<IServiceProvider>();
@@ -56,16 +79,16 @@ namespace SharedGrocery
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, GroceryDataContext groceryDataContext)
+        public void Configure(IApplicationBuilder app, GroceryDataContext groceryDataContext, UaaContext uaaContext,
+            ILoggerFactory loggerFactory)
         {
-            _logger?.LogDebug("Configuring app");
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            _logger = loggerFactory.CreateLogger<Startup>();
             
             _logger?.LogDebug("Starting database migration");
             groceryDataContext.Database.Migrate();
+            uaaContext.Database.Migrate();
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

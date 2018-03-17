@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SharedGrocery.Models;
+using SharedGrocery.Common.Model;
 
-namespace SharedGrocery.Repositories
+namespace SharedGrocery.Common.Repository
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : AbstractEntity
@@ -20,7 +21,12 @@ namespace SharedGrocery.Repositories
 
         public TEntity FindOne(int id)
         {
-            return DbSet.FirstOrDefault(grocery => grocery.Id == id);
+            return DbSet.Find(id);
+        }
+
+        public Task<TEntity> FindOneAsync(int id)
+        {
+            return DbSet.FindAsync(id);
         }
 
         public ICollection<TEntity> FindAll()

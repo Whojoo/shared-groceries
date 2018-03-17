@@ -3,77 +3,83 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using SharedGrocery;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using SharedGrocery.GroceryService.Repository.DBContexts;
 
 namespace SharedGrocery.Migrations
 {
     [DbContext(typeof(GroceryDataContext))]
-    [Migration("20180206174302_Initial")]
-    partial class Initial
+    [Migration("20180217114441_UaaSeperation")]
+    partial class UaaSeperation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
-            modelBuilder.Entity("SharedGrocery.Grocery", b =>
+            modelBuilder.Entity("SharedGrocery.Models.Grocery", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("GroceryListId");
 
-                    b.Property<string>("Name");
+                    b.Property<int?>("ItemId");
+
+                    b.Property<int>("Quantity");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroceryListId");
 
+                    b.HasIndex("ItemId");
+
                     b.ToTable("Groceries");
                 });
 
-            modelBuilder.Entity("SharedGrocery.GroceryList", b =>
+            modelBuilder.Entity("SharedGrocery.Models.GroceryList", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OwnerId");
+                    b.Property<int>("OwnerId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("GroceryLists");
                 });
 
-            modelBuilder.Entity("SharedGrocery.User", b =>
+            modelBuilder.Entity("SharedGrocery.Models.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Token");
+                    b.Property<string>("Barcode");
+
+                    b.Property<string>("Brand");
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("SharedGrocery.Grocery", b =>
+            modelBuilder.Entity("SharedGrocery.Models.Grocery", b =>
                 {
-                    b.HasOne("SharedGrocery.GroceryList")
+                    b.HasOne("SharedGrocery.Models.GroceryList")
                         .WithMany("Groceries")
                         .HasForeignKey("GroceryListId");
-                });
 
-            modelBuilder.Entity("SharedGrocery.GroceryList", b =>
-                {
-                    b.HasOne("SharedGrocery.User", "Owner")
+                    b.HasOne("SharedGrocery.Models.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("ItemId");
                 });
+#pragma warning restore 612, 618
         }
     }
 }

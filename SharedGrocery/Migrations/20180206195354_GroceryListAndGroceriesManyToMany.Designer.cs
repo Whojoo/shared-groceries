@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using SharedGrocery.Repositories.DBContexts;
 using System;
+using SharedGrocery.GroceryService.Repository.DBContexts;
 
 namespace SharedGrocery.Migrations
 {
