@@ -1,6 +1,9 @@
+# Project git ignore
 obj/
 *.userprefs
 .idea/
-.vscode/
-!.vscode/launch.json
 secrets.env
+bin/
+
+# Ignore exclusions
+!/.vscode/launch.json

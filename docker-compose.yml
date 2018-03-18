@@ -4,8 +4,10 @@ services:
   grocery-service:
     image: whojoo/grocery-service:${GROCERY_SERVICE_TAG}
     links:
-     - grocery-data
-     - uaa-data
+      - grocery-data
+      - uaa-data
+    env_file:
+      - secrets.env
   
   grocery-data:
     image: whojoo/grocery-data-postgres:${GROCERY_DATA_POSTGRES_TAG}

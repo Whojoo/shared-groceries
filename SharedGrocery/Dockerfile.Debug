@@ -1,0 +1,26 @@
+# https://github.com/sleemer/docker.dotnet.debug
+FROM microsoft/dotnet:2-sdk
+ENV NUGET_XMLDOC_MODE skip
+WORKDIR /vsdbg
+
+# Installing vsdbg debbuger into our container 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+# Copying source files into container and publish it
+RUN mkdir /app
+WORKDIR /app
+
+COPY SharedGrocery.csproj /app
+RUN dotnet restore
+
+COPY . /app
+RUN dotnet publish -c Debug -o out
+
+ENV ASPNETCORE_URLS http://[::]:80
+
+# Kick off a container just to wait debugger to attach and run the app
+ENTRYPOINT ["/bin/bash", "-c", "sleep infinity"]
