@@ -1,4 +1,6 @@
+# Project git ignore
 obj/
 *.userprefs
 .idea/
-.vscode/
+secrets.env
+bin/
