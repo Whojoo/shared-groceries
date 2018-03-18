@@ -2,3 +2,5 @@ obj/
 *.userprefs
 .idea/
 .vscode/
+!.vscode/launch.json
+secrets.env
