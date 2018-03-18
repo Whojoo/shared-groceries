@@ -4,7 +4,7 @@ services:
   grocery-service:
     build:
       context: ./SharedGrocery
-      dockerfile: Dockerfile.Debug
+      dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:Groceries=Host=grocery-data;Port=5432;Database=groceries;Username=dbuser;Password=Passw0rd

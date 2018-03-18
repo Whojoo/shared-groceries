@@ -3,33 +3,4 @@ version: '3'
 services:
   grocery-service:
     build:
-      context: ./SharedGrocery
-      dockerfile: Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:Groceries=Host=grocery-data;Port=5432;Database=groceries;Username=dbuser;Password=Passw0rd
-      - ConnectionStrings:Uaa=Host=uaa-data;Port=5432;Database=uaa;Username=dbuser;Password=Passw0rd
-    ports:
-      - "8000:80"
-  
-  grocery-data:
-    build:
-      context: ./postgres-server
-      dockerfile: Dockerfile
-    ports:
-      - "5432:5432"
-    environment: 
-      - POSTGRES_PASSWORD=Passw0rd
-      - POSTGRES_USER=dbuser
-      - POSTGRES_DB=groceries
-  
-  uaa-data:
-    build:
-      context: ./postgres-server
-      dockerfile: Dockerfile
-    ports:
-      - "5433:5432"
-    environment: 
-      - POSTGRES_PASSWORD=Passw0rd
-      - POSTGRES_USER=dbuser
-      - POSTGRES_DB=uaa
+      dockerfile: Dockerfile.Debug
