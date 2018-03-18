@@ -59,8 +59,6 @@ This will start all the required services. The application won't be started unti
 
 ## Debug without Docker
 
-Debugging a docker contrainer currently doesn't work, so debugging is done without running the application in docker.
-
 Either host your own postgres servers (see below) or run `docker-compose up -d --build grocery-data uaa-data`
 
 Make sure postgres servers are running with the following parameters:
