@@ -4,6 +4,3 @@ obj/
 .idea/
 secrets.env
 bin/
-
-# Ignore exclusions
-!/.vscode/launch.json
