@@ -4,10 +4,12 @@
  using System.Text;
  using System.Threading.Tasks;
  using Google.Apis.Auth;
- using Microsoft.Extensions.Configuration;
  using Microsoft.Extensions.Logging;
  using Microsoft.IdentityModel.Tokens;
+ using SharedGrocery.Common;
+ using SharedGrocery.Common.Config;
  using SharedGrocery.Models;
+ using SharedGrocery.Uaa.Config;
  using SharedGrocery.Uaa.Model;
 
 namespace SharedGrocery.Uaa.Service
@@ -15,20 +17,17 @@ namespace SharedGrocery.Uaa.Service
     public class AuthenticationService : IAuthenticationService
     {
         private readonly string _googleClientId;
+        private readonly byte[] _apiSecret;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
 
-        public AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration, IUserService userService)
+        public AuthenticationService(ILogger<AuthenticationService> logger, IUserService userService,
+            GoogleClientConfig googleClientConfig, ApiConfig apiConfig)
         {
-            _configuration = configuration;
             _logger = logger;
             _userService = userService;
-            _googleClientId = configuration.GetValue<string>("GOOGLE_CLIENT_ID");
-            if (_googleClientId == null)
-            {
-                throw new Exception("No Google client id configured!");
-            }
+            _googleClientId = googleClientConfig.ClientId;
+            _apiSecret = apiConfig.ApiSecret;
         }
 
         public async Task<string> GenerateJwtFromGoogleToken(string idToken)
@@ -61,7 +60,7 @@ namespace SharedGrocery.Uaa.Service
                 new Claim("subjectType", user.TokenType.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApiSecret"]));
+            var key = new SymmetricSecurityKey(_apiSecret);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             
             var token = new JwtSecurityToken("robindegier.nl", "robindegier.nl", claims,

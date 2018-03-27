@@ -12,12 +12,12 @@ services:
   grocery-data:
     image: whojoo/grocery-data-postgres:${GROCERY_DATA_POSTGRES_TAG}
     volumes:
-      - grocery-data:/var/lib/postgres/db
+      - grocery-data:/var/lib/postgresql/data
 
   uaa-data:
-    image: whojoo/uaa-data--postgres:${UAA_DATA_POSTGRES_TAG}
+    image: whojoo/uaa-data-postgres:${UAA_DATA_POSTGRES_TAG}
     volumes:
-      - uaa-data:/var/lib/postgres/db
+      - uaa-data:/var/lib/postgresql/data
 
 volumes:
   grocery-data:
