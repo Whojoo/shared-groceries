@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace SharedGrocery.Common.Config
+﻿namespace SharedGrocery.Common.Config
 {
     public interface IAppConfiguration
     {
