@@ -1,4 +1,4 @@
-﻿namespace SharedGrocery.Common.Config
+﻿namespace SharedGrocery.Common.Api.Config
 {
     public interface IAppConfiguration
     {

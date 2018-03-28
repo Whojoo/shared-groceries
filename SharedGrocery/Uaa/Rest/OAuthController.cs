@@ -1,7 +1,8 @@
 ﻿﻿using System.Threading.Tasks;
  using Microsoft.AspNetCore.Authorization;
  using Microsoft.AspNetCore.Mvc;
-using SharedGrocery.Uaa.Rest.Filters;
+ using SharedGrocery.Uaa.Api.Service;
+ using SharedGrocery.Uaa.Rest.Filters;
 using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery.Uaa.Rest

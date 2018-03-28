@@ -7,6 +7,7 @@
  using Microsoft.Extensions.Configuration;
  using Microsoft.Extensions.DependencyInjection;
  using Microsoft.Extensions.Logging;
+ using SharedGrocery.Common.Api.Config;
  using SharedGrocery.Common.Config;
  using SharedGrocery.Common.DI;
  using SharedGrocery.GroceryService.Config;

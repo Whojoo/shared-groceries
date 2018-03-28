@@ -1,5 +1,7 @@
 ﻿﻿using Microsoft.Extensions.Logging;
  using SharedGrocery.Models;
+ using SharedGrocery.Uaa.Api.Repository;
+ using SharedGrocery.Uaa.Api.Service;
  using SharedGrocery.Uaa.Model;
  using SharedGrocery.Uaa.Repository;
 

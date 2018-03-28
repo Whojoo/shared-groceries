@@ -1,8 +1,8 @@
-﻿using SharedGrocery.Common.Repository;
+﻿using SharedGrocery.Common.Api.Repository;
 using SharedGrocery.Models;
 using SharedGrocery.Uaa.Model;
 
-namespace SharedGrocery.Uaa.Repository
+namespace SharedGrocery.Uaa.Api.Repository
 {
     public interface IUserRepository : IBaseRepository<User>
     {

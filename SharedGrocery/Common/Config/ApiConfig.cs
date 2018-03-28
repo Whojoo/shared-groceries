@@ -11,5 +11,10 @@ namespace SharedGrocery.Common.Config
         {
             ApiSecret = Encoding.UTF8.GetBytes(configuration.GetValue<string>("ApiSecret"));
         }
+
+        public ApiConfig(byte[] apiSecret)
+        {
+            ApiSecret = apiSecret;
+        }
     }
 }

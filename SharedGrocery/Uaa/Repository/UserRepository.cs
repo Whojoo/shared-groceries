@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using SharedGrocery.Common.Repository;
 using SharedGrocery.Models;
+using SharedGrocery.Uaa.Api.Repository;
 using SharedGrocery.Uaa.Model;
 using SharedGrocery.Uaa.Repository.DBContext;
 

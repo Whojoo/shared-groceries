@@ -1,6 +1,6 @@
 ﻿﻿using System.Threading.Tasks;
 
-namespace SharedGrocery.Uaa.Service
+namespace SharedGrocery.Uaa.Api.Service
 {
     public interface IAuthenticationService
     {
