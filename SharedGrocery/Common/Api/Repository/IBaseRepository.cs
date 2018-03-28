@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SharedGrocery.Common.Model;
 
-namespace SharedGrocery.Common.Repository
+namespace SharedGrocery.Common.Api.Repository
 {
     public interface IBaseRepository<TEntity> where TEntity : AbstractEntity
     {

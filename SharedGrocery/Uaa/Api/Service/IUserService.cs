@@ -1,7 +1,7 @@
-﻿﻿using SharedGrocery.Models;
- using SharedGrocery.Uaa.Model;
+﻿using SharedGrocery.Models;
+using SharedGrocery.Uaa.Model;
 
-namespace SharedGrocery.Uaa.Service
+namespace SharedGrocery.Uaa.Api.Service
 {
     public interface IUserService
     {

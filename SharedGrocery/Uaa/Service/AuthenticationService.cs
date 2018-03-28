@@ -1,56 +1,54 @@
-﻿﻿using System;
- using System.IdentityModel.Tokens.Jwt;
+﻿﻿using System.IdentityModel.Tokens.Jwt;
  using System.Security.Claims;
- using System.Text;
  using System.Threading.Tasks;
- using Google.Apis.Auth;
- using Microsoft.Extensions.Configuration;
  using Microsoft.Extensions.Logging;
  using Microsoft.IdentityModel.Tokens;
+ using SharedGrocery.Common.Api.Util;
+ using SharedGrocery.Common.Config;
  using SharedGrocery.Models;
+ using SharedGrocery.Uaa.Api.Service;
+ using SharedGrocery.Uaa.Api.Util;
  using SharedGrocery.Uaa.Model;
 
 namespace SharedGrocery.Uaa.Service
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly string _googleClientId;
+        private readonly ApiConfig _apiConfig;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
+        private readonly IExternalIdUtil _externalIdUtil;
+        private readonly IClock _clock;
 
-        public AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration, IUserService userService)
+        public AuthenticationService(ILogger<AuthenticationService> logger, IUserService userService,
+            ApiConfig apiConfig, IExternalIdUtil externalIdUtil, IClock clock)
         {
-            _configuration = configuration;
             _logger = logger;
             _userService = userService;
-            _googleClientId = configuration.GetValue<string>("GOOGLE_CLIENT_ID");
-            if (_googleClientId == null)
-            {
-                throw new Exception("No Google client id configured!");
-            }
+            _externalIdUtil = externalIdUtil;
+            _clock = clock;
+            _apiConfig = apiConfig;
         }
 
         public async Task<string> GenerateJwtFromGoogleToken(string idToken)
         {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken);
-            if (!IsPayloadValid(payload))
-            {
-                return null;
-            }
+            var payload = await _externalIdUtil.ValidateExternalId(idToken);
             
-            var user = _userService.GetUser(payload.Subject, TokenType.GOOGLE);
+            var user = _userService.GetUser(payload.Id, TokenType.GOOGLE);
             if (user == null)
             {
+                _logger.LogInformation("Creating new Google user");
                 user = new User
                 {
-                    TokenId = payload.Subject,
+                    TokenId = payload.Id,
                     TokenType = TokenType.GOOGLE
                 };
                 user = _userService.Save(user);
             }
 
-            return GenerateJwt(user);
+            var jwt = GenerateJwt(user);
+            _logger.LogInformation($"Generated for user {user.Id} jwt {jwt}");
+            return jwt;
         }
 
         private string GenerateJwt(User user)
@@ -61,18 +59,13 @@ namespace SharedGrocery.Uaa.Service
                 new Claim("subjectType", user.TokenType.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApiSecret"]));
+            var key = new SymmetricSecurityKey(_apiConfig.ApiSecret);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             
             var token = new JwtSecurityToken("robindegier.nl", "robindegier.nl", claims,
-                expires: DateTime.Now.AddHours(1), signingCredentials: creds);
+                expires: _clock.Now().AddHours(1), signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private bool IsPayloadValid(GoogleJsonWebSignature.Payload arg)
-        {
-            return _googleClientId.Equals(arg.Audience);
         }
     }
 }

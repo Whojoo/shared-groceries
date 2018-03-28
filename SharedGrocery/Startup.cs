@@ -1,18 +1,21 @@
 ﻿﻿using System;
- using System.Text;
+ using System.Collections.Generic;
  using Autofac;
-using Autofac.Extensions.DependencyInjection;
- using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Autofac.Extensions.DependencyInjection;
  using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
- using Microsoft.IdentityModel.Tokens;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.Extensions.Configuration;
+ using Microsoft.Extensions.DependencyInjection;
+ using Microsoft.Extensions.Logging;
+ using SharedGrocery.Common.Api.Config;
+ using SharedGrocery.Common.Config;
+ using SharedGrocery.Common.DI;
+ using SharedGrocery.GroceryService.Config;
+ using SharedGrocery.GroceryService.DI;
  using SharedGrocery.GroceryService.Repository.DBContexts;
- using SharedGrocery.Uaa.Repository;
+ using SharedGrocery.Uaa.Config;
+ using SharedGrocery.Uaa.DI;
  using SharedGrocery.Uaa.Repository.DBContext;
-using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery
 {
@@ -33,55 +36,38 @@ namespace SharedGrocery
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<GroceryDataContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("Groceries")));
-
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<UaaContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("Uaa")));
-
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = "robindegier.nl",
-                        ValidAudience = "robindegier.nl",
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration["ApiSecret"]))
-                    };
-                });
-
+            services.AddJwtAuthentication(Configuration);
+            services.AddUaaDatabases(Configuration);
+            services.AddGroceryDatabases(Configuration);
+            
             var containerBuilder = new ContainerBuilder();
             
             containerBuilder.Populate(services);
-            containerBuilder.RegisterType<UserService>().As<IUserService>();
-            containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
-            containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
             
             var loggingFactory = new LoggerFactory();
             loggingFactory.AddConsole(Configuration.GetSection("Logging"));
             loggingFactory.AddDebug();
             containerBuilder.RegisterInstance(loggingFactory).As<ILoggerFactory>();
+            
+            CommonModules.RegisterModules(containerBuilder);
+            UaaModules.RegisterModules(containerBuilder);
+            GroceryModules.RegisterModules(containerBuilder);
 
             var container = containerBuilder.Build();
+
             return container.Resolve<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
         public void Configure(IApplicationBuilder app, GroceryDataContext groceryDataContext, UaaContext uaaContext,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory, IEnumerable<IAppConfiguration> appConfigurations)
         {
+            foreach (var configuration in appConfigurations)
+            {
+                configuration.Configure();
+            }
+            
             _logger = loggerFactory.CreateLogger<Startup>();
             
             _logger?.LogDebug("Starting database migration");

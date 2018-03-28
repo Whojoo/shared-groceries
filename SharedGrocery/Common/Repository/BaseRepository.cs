@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SharedGrocery.Common.Api.Repository;
 using SharedGrocery.Common.Model;
 
 namespace SharedGrocery.Common.Repository
