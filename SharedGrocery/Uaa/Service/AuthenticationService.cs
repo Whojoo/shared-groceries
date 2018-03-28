@@ -1,8 +1,7 @@
-﻿﻿using System.IdentityModel.Tokens.Jwt;
- using System.Security.Claims;
- using System.Threading.Tasks;
+﻿﻿using System.Threading.Tasks;
+ using JWT.Algorithms;
+ using JWT.Builder;
  using Microsoft.Extensions.Logging;
- using Microsoft.IdentityModel.Tokens;
  using SharedGrocery.Common.Api.Util;
  using SharedGrocery.Common.Config;
  using SharedGrocery.Models;
@@ -46,26 +45,23 @@ namespace SharedGrocery.Uaa.Service
                 user = _userService.Save(user);
             }
 
-            var jwt = GenerateJwt(user);
-            _logger.LogInformation($"Generated for user {user.Id} jwt {jwt}");
-            return jwt;
+            var token = GenerateJwt(user);
+
+            _logger.LogInformation($"Generated for user {user.Id} jwt {token}");
+            
+            return token;
         }
 
         private string GenerateJwt(User user)
         {
-            var claims = new[]
-            {
-                new Claim("subject", user.Id.ToString()),
-                new Claim("subjectType", user.TokenType.ToString())
-            };
-
-            var key = new SymmetricSecurityKey(_apiConfig.ApiSecret);
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            
-            var token = new JwtSecurityToken("robindegier.nl", "robindegier.nl", claims,
-                expires: _clock.Now().AddHours(1), signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtBuilder()
+                .WithAlgorithm(new HMACSHA256Algorithm())
+                .WithSecret(_apiConfig.ApiSecret)
+                .AddClaim("subject", user.Id)
+                .AddClaim("subjectType", user.TokenType)
+                .AddClaim("exp", _clock.NowSeconds() + _apiConfig.ApiExp)
+                .Issuer("mainrobik.nl")
+                .Build();
         }
     }
 }

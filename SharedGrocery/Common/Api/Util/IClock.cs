@@ -5,5 +5,7 @@ namespace SharedGrocery.Common.Api.Util
     public interface IClock
     {
         DateTime Now();
+
+        long NowSeconds();
     }
 }

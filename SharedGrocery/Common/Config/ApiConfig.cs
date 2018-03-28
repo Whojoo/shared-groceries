@@ -1,20 +1,22 @@
-﻿using System.Text;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace SharedGrocery.Common.Config
 {
     public class ApiConfig
     {
-        public byte[] ApiSecret { get; }
+        public string ApiSecret { get; }
+        public long ApiExp { get; }
 
         public ApiConfig(IConfiguration configuration)
         {
-            ApiSecret = Encoding.UTF8.GetBytes(configuration.GetValue<string>("ApiSecret"));
+            ApiSecret = configuration.GetValue<string>("ApiSecret");
+            ApiExp = configuration.GetValue<long>("ApiExp");
         }
 
-        public ApiConfig(byte[] apiSecret)
+        public ApiConfig(string secret, long exp)
         {
-            ApiSecret = apiSecret;
+            ApiSecret = secret;
+            ApiExp = exp;
         }
     }
 }
