@@ -4,6 +4,7 @@
  using Microsoft.Extensions.Logging;
  using SharedGrocery.Common.Api.Util;
  using SharedGrocery.Common.Config;
+ using SharedGrocery.Common.Util;
  using SharedGrocery.Models;
  using SharedGrocery.Uaa.Api.Service;
  using SharedGrocery.Uaa.Api.Util;
@@ -54,13 +55,10 @@ namespace SharedGrocery.Uaa.Service
 
         private string GenerateJwt(User user)
         {
-            return new JwtBuilder()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(_apiConfig.ApiSecret)
+            return new JwtBuilder().GetDefaultJwtConfig(_apiConfig)
                 .AddClaim("subject", user.Id)
                 .AddClaim("subjectType", user.TokenType)
                 .AddClaim("exp", _clock.NowSeconds() + _apiConfig.ApiExp)
-                .Issuer("mainrobik.nl")
                 .Build();
         }
     }

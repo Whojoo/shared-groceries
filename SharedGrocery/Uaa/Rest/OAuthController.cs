@@ -1,6 +1,7 @@
 ﻿﻿using System.Threading.Tasks;
  using Microsoft.AspNetCore.Authorization;
  using Microsoft.AspNetCore.Mvc;
+ using SharedGrocery.Common.Util;
  using SharedGrocery.Uaa.Api.Service;
  using SharedGrocery.Uaa.Rest.Filters;
 using SharedGrocery.Uaa.Service;
@@ -26,13 +27,12 @@ namespace SharedGrocery.Uaa.Rest
         [HttpPost("google")]
         public async Task<IActionResult> GoogleLogin()
         {
-            string authorization = Request.Headers["Authorization"];
-            if (authorization == null || !authorization.StartsWith("Bearer "))
+            var rawToken = Request.Headers.GetBearerAuthorization();
+            if (string.IsNullOrEmpty(rawToken))
             {
                 return Unauthorized();
             }
-
-            var rawToken = authorization.Substring(7);
+            
             var jwt = await _authenticationService.GenerateJwtFromGoogleToken(rawToken);
 
             if (jwt != null)
