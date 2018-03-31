@@ -1,10 +1,12 @@
-﻿using JWT.Algorithms;
+﻿using System;
+using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SharedGrocery.Common.Api.Util;
 using SharedGrocery.Common.Config;
 using SharedGrocery.Common.Model;
+using SharedGrocery.Common.Util;
 using SharedGrocery.Models;
 using SharedGrocery.Uaa.Api.Model;
 using SharedGrocery.Uaa.Api.Service;
@@ -54,8 +56,8 @@ namespace SharedGrocery.Tests.Uaa.Service
                 TokenId = tokenId,
                 TokenType = TokenType.GOOGLE
             };
-            const long now = 1522265466;
-            const long future = now + ExpTime;
+            var now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var future = now + ExpTime;
 
             // WHEN
             _googleIdUtilMock.Setup(util => util.ValidateExternalId(It.Is<string>(token => tokenId.Equals(token))))
@@ -74,8 +76,7 @@ namespace SharedGrocery.Tests.Uaa.Service
             var jwt = jwtTaskResult.Result;
             Assert.NotNull(jwt);
             var userContext = new JwtBuilder()
-                .WithSecret(ApiSecret)
-                .WithAlgorithm(new HMACSHA256Algorithm())
+                .GetDefaultJwtConfig(_apiConfig)
                 .MustVerifySignature()
                 .Decode<UserContext>(jwt);
             
