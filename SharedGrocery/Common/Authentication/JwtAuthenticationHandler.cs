@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using JWT;
@@ -42,11 +43,18 @@ namespace SharedGrocery.Common.Authentication
             }
             catch (TokenExpiredException)
             {
+                Logger.LogInformation($"Token expired: {token}");
                 return Task.FromResult(AuthenticateResult.Fail("Token expired"));
             }
             catch (SignatureVerificationException)
             {
+                Logger.LogInformation($"Token invalid signature: {token}");
                 return Task.FromResult(AuthenticateResult.Fail("Token has invalid signature"));
+            }
+            catch (Exception)
+            {
+                Logger.LogInformation($"Token unknown expection: {token}");
+                return Task.FromResult(AuthenticateResult.Fail("Unknown error"));
             }
         }
         
