@@ -1,7 +1,6 @@
 ﻿﻿using Microsoft.AspNetCore.Authorization;
  using Microsoft.AspNetCore.Mvc;
  using SharedGrocery.Uaa.Api.Service;
- using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery.Uaa.Rest
 {

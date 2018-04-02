@@ -1,5 +1,4 @@
-﻿using System;
-using SharedGrocery.Models;
+﻿using SharedGrocery.Models;
 
 namespace SharedGrocery.Common.Model
 {
@@ -7,6 +6,6 @@ namespace SharedGrocery.Common.Model
     {
         public int Subject { get; set; }
         public TokenType SubjectType { get; set; }
-        public DateTime Exp { get; set; }
+        public long Exp { get; set; }
     }
 }

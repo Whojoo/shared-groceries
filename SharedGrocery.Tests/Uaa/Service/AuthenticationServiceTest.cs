@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Text;
+using JWT.Builder;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json.Linq;
 using SharedGrocery.Common.Api.Util;
 using SharedGrocery.Common.Config;
+using SharedGrocery.Common.Model;
+using SharedGrocery.Common.Util;
 using SharedGrocery.Models;
 using SharedGrocery.Uaa.Api.Model;
 using SharedGrocery.Uaa.Api.Service;
@@ -17,12 +18,13 @@ namespace SharedGrocery.Tests.Uaa.Service
 {
     public class AuthenticationServiceTest
     {
-        private static readonly byte[] ApiSecret = Encoding.UTF8.GetBytes("thisisnotthesecretyouarelookingfor");
-        
+        private const string ApiSecret = "thisisnotthesecretyouarelookingfor";
+        private const long ExpTime = 3600;
+
         private readonly AuthenticationService _authenticationService;
         
         // Configs
-        private readonly ApiConfig _apiConfig = new ApiConfig(ApiSecret);
+        private readonly ApiConfig _apiConfig = new ApiConfig(ApiSecret, ExpTime);
 
         // Mocks
         private readonly Mock<IUserService> _userServiceMock = new Mock<IUserService>();
@@ -53,8 +55,8 @@ namespace SharedGrocery.Tests.Uaa.Service
                 TokenId = tokenId,
                 TokenType = TokenType.GOOGLE
             };
-            var now = new DateTime(0, DateTimeKind.Utc);
-            var hour = now.AddHours(1);
+            var now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var future = now + ExpTime;
 
             // WHEN
             _googleIdUtilMock.Setup(util => util.ValidateExternalId(It.Is<string>(token => tokenId.Equals(token))))
@@ -64,26 +66,23 @@ namespace SharedGrocery.Tests.Uaa.Service
                     It.Is<string>(subjectString => subject.Equals(subjectString)),
                     It.Is<TokenType>(token => TokenType.GOOGLE.Equals(token))))
                 .Returns(user);
-            _clockMock.Setup(clock => clock.Now()).Returns(now);
+            _clockMock.Setup(clock => clock.NowSeconds()).Returns(now);
 
             // INVOKE
             var jwtTaskResult = _authenticationService.GenerateJwtFromGoogleToken(tokenId);
 
             // THEN
-            var jwtResult = jwtTaskResult.Result;
-            Assert.NotNull(jwtResult);
-            var jwtPayload = jwtResult.Split('.')[1];
-            // Base64 strings are multiple of 4, if not then add =. C# is not smart enough to do so itself...
-            while (jwtPayload.Length % 4 != 0)
-            {
-                jwtPayload += '=';
-            }
-            var jwtPayloadDecoded = Convert.FromBase64String(jwtPayload);
-            var jObject = JObject.Parse(Encoding.UTF8.GetString(jwtPayloadDecoded));
-            Assert.NotNull(jObject);
-            Assert.Equal(userId.ToString(), jObject["subject"].Value<string>());
-            Assert.Equal(TokenType.GOOGLE.ToString(), jObject["subjectType"].Value<string>());
-            Assert.Equal((hour - now).Seconds, jObject["exp"].Value<int>());
+            var jwt = jwtTaskResult.Result;
+            Assert.NotNull(jwt);
+            var userContext = new JwtBuilder()
+                .GetDefaultJwtConfig(_apiConfig)
+                .MustVerifySignature()
+                .Decode<UserContext>(jwt);
+            
+            Assert.NotNull(userContext);
+            Assert.Equal(userId, userContext.Subject);
+            Assert.Equal(TokenType.GOOGLE, userContext.SubjectType);
+            Assert.Equal(future, userContext.Exp);
         }
     }
 }
