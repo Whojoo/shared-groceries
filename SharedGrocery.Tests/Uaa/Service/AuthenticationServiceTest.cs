@@ -1,5 +1,4 @@
 ﻿using System;
-using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.Extensions.Logging;
 using Moq;
