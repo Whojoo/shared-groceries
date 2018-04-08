@@ -2,6 +2,7 @@
 using JWT.Builder;
 using Microsoft.AspNetCore.Http;
 using SharedGrocery.Common.Config;
+using SharedGrocery.Common.Model;
 
 namespace SharedGrocery.Common.Util
 {
@@ -26,6 +27,13 @@ namespace SharedGrocery.Common.Util
             return builder.WithAlgorithm(new HMACSHA256Algorithm())
                 .WithSecret(apiConfig.ApiSecret)
                 .Issuer("mainrobik.nl");
+        }
+
+        public static UserContext GetUserContext(this HttpRequest request, ApiConfig apiConfig)
+        {
+            var jwt = request.Headers.GetBearerAuthorization();
+            return new JwtBuilder().GetDefaultJwtConfig(apiConfig)
+                .Decode<UserContext>(jwt);
         }
     }
 }
