@@ -11,9 +11,10 @@ using System;
 namespace SharedGrocery.Migrations
 {
     [DbContext(typeof(GroceryDataContext))]
-    partial class GroceryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20180408084544_AddCreationTimestampToList")]
+    partial class AddCreationTimestampToList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,4 +1,5 @@
-﻿﻿using System.Collections.Generic;
+﻿﻿using System;
+ using System.Collections.Generic;
 using SharedGrocery.Common.Model;
 
 namespace SharedGrocery.GroceryService.Model
@@ -7,5 +8,6 @@ namespace SharedGrocery.GroceryService.Model
     {
         public int OwnerId { get; set; }
         public ICollection<Grocery> Groceries { get; } = new List<Grocery>();
+        public DateTime CreationDate { get; set; }
     }
 }
