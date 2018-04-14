@@ -2,15 +2,29 @@
 
 ## Build&Run
 
+You need a config-server.env file in order to use the config server.
+
+Build the `whojoo/grocery-service` image of the grocery-service.
+
 ```bash
-docker-compose up -d --build
+docker-compose up -d
 ```
 
 To see and follow the logs of a service `docker-compose logs -t -f grocery-service`
 
-You need a secrets.env file or you need to replace the following variables:
+## Config server
 
-- GOOGLE_CLIENT_ID (Used for google authentication)
+The current build uses a Spring Cloud Config server. The files are on a private repository. In order to use the config server you first need access to the config-server.env file.
+
+You can fake the file by setting it up like this.
+
+```env
+SPRING_PROFILES_ACTIVE=native
+```
+
+That way all you are missing is the setup for encryption/decryption.
+
+The config server is setup to use config files in ./config-server. Either checkout the config file repository in that folder or recreate the configuration in a `shared-groceries-{env}.yml` file. The file should have the same structure as the `appsettings.json` file. You can also check the `Common.Config.Config.cs` file.
 
 ## Debug with docker
 
@@ -18,7 +32,7 @@ Debugging with docker is done through Visual Studio Code and has the following r
 
 - [Visual Studio Code](https://code.visualstudio.com/)
 - launch.json file in .vscode folder
-- secrets.env file mentioned above, or at least the variables mentioned replaced
+- config-server.env file mentioned above
 
 You need a .vscode folder in the root of the project containing the following launch.json file.
 
@@ -47,19 +61,14 @@ You need a .vscode folder in the root of the project containing the following la
         }
     ]
 }
-```
 
-To allow remote debugging you then need to execute the following command.
-
-```bash
-docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.debug.yml up -d --build
-```
-
-This will start all the required services. The application won't be started until the debugger is started. And all the logging is done through the debugger so `docker-compose logs grocery-service` won't show anything.
+`docker-compose up -d` will start all the required services. The application won't be started until the debugger is started. And all the logging is done through the debugger so `docker-compose logs grocery-service` won't show anything.
 
 ## Debug without Docker
 
 Either host your own postgres servers (see below) or run `docker-compose up -d --build grocery-data uaa-data`
+
+Besides that you still need the config server for the correct configuration, check that above.
 
 Make sure postgres servers are running with the following parameters:
 
@@ -78,13 +87,3 @@ Make sure postgres servers are running with the following parameters:
 | User Id   | dbuser    |
 | Password  | Passw0rd  |
 | Database  | uaa       |
-
-## Required environment variables
-
-The application and the android app expect the following values:
-
-| Parameter              | Default value            |
-| ---------------------- | ------------------------ |
-| ASPNETCORE_ENVIRONMENT | Development              |
-| ASPNETCORE_URLS        | `http://localhost:8000)` |
-| GOOGLE_CLIENT_ID       | Yea nice try             |
