@@ -3,4 +3,6 @@ version: '3'
 services:
   grocery-service:
     build:
+    build:
+      context: ./SharedGrocery
       dockerfile: Dockerfile.Debug

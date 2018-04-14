@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Google.Apis.Util;
+using Microsoft.Extensions.Options;
+using SharedGrocery.Common.Config;
 using SharedGrocery.Uaa.Api.Model;
 using SharedGrocery.Uaa.Api.Util;
 using SharedGrocery.Uaa.Config;
@@ -8,11 +11,11 @@ namespace SharedGrocery.Uaa.Util
 {
     public class GoogleJwtUtil : IExternalIdUtil
     {
-        private readonly GoogleClientConfig _googleClientConfig;
+        private readonly UaaGoogleConfig _googleClientConfig;
 
-        public GoogleJwtUtil(GoogleClientConfig googleClientConfig)
+        public GoogleJwtUtil(IOptions<Common.Config.Config> config)
         {
-            _googleClientConfig = googleClientConfig;
+            _googleClientConfig = config.Value.SharedGroceries.Uaa.Google;
         }
 
         public async Task<ExternalIdPayload> ValidateExternalId(string idToken)

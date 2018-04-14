@@ -1,6 +1,7 @@
 ﻿using System;
 using JWT.Builder;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using SharedGrocery.Common.Api.Util;
 using SharedGrocery.Common.Config;
@@ -24,7 +25,11 @@ namespace SharedGrocery.Tests.Uaa.Service
         private readonly AuthenticationService _authenticationService;
         
         // Configs
-        private readonly ApiConfig _apiConfig = new ApiConfig(ApiSecret, ExpTime);
+        private readonly ApiConfig _apiConfig = new ApiConfig
+        {
+            ApiExp = ExpTime,
+            ApiSecret = ApiSecret
+        };
 
         // Mocks
         private readonly Mock<IUserService> _userServiceMock = new Mock<IUserService>();
@@ -34,8 +39,19 @@ namespace SharedGrocery.Tests.Uaa.Service
 
         public AuthenticationServiceTest()
         {
+            IOptions<Config> config = new OptionsWrapper<Config>(new Config
+            {
+                SharedGroceries = new AppConfig
+                {
+                    Api = new ApiConfig
+                    {
+                        ApiExp = ExpTime,
+                        ApiSecret = ApiSecret
+                    }
+                }
+            });
             _authenticationService = new AuthenticationService(_loggerMock.Object, _userServiceMock.Object,
-                _apiConfig, _googleIdUtilMock.Object, _clockMock.Object);
+                config, _googleIdUtilMock.Object, _clockMock.Object);
         }
 
         [Fact]

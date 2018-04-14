@@ -16,11 +16,13 @@ namespace SharedGrocery.Common.Authentication
 {
     public class JwtAuthenticationHandler : AuthenticationHandler<JwtAuthenticationOptions>
     {
-        private readonly ApiConfig _apiConfig;
+        private readonly Config.Config _config;
         
-        public JwtAuthenticationHandler(IOptionsMonitor<JwtAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IConfiguration configuration) : base(options, logger, encoder, clock)
+        public JwtAuthenticationHandler(IOptionsMonitor<JwtAuthenticationOptions> options, ILoggerFactory logger,
+            UrlEncoder encoder, ISystemClock clock)
+            : base(options, logger, encoder, clock)
         {
-            _apiConfig = new ApiConfig(configuration);
+            _config = options.CurrentValue.Configuration;
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -33,7 +35,7 @@ namespace SharedGrocery.Common.Authentication
 
             try
             {
-                var userContext = new JwtBuilder().GetDefaultJwtConfig(_apiConfig)
+                var userContext = new JwtBuilder().GetDefaultJwtConfig(_config.SharedGroceries.Api)
                     .MustVerifySignature()
                     .Decode<UserContext>(token);
                 Logger.LogInformation($"Verfied user {userContext}");

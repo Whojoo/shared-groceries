@@ -7,6 +7,7 @@
  using Microsoft.Extensions.Configuration;
  using Microsoft.Extensions.DependencyInjection;
  using Microsoft.Extensions.Logging;
+ using Microsoft.Extensions.Options;
  using SharedGrocery.Common.Api.Config;
  using SharedGrocery.Common.Config;
  using SharedGrocery.Common.DI;
@@ -16,6 +17,7 @@
  using SharedGrocery.Uaa.Config;
  using SharedGrocery.Uaa.DI;
  using SharedGrocery.Uaa.Repository.DBContext;
+ using Steeltoe.Extensions.Configuration.ConfigServer;
 
 namespace SharedGrocery
 {
@@ -35,10 +37,16 @@ namespace SharedGrocery
         // ReSharper disable once UnusedMember.Global
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddConfiguration(Configuration);
             services.AddMvc();
-            services.AddJwtAuthentication(Configuration);
-            services.AddUaaDatabases(Configuration);
-            services.AddGroceryDatabases(Configuration);
+            services.Configure<Config>(Configuration);
+
+            var provider = services.BuildServiceProvider();
+            var config = provider.GetService<IOptions<Config>>().Value;
+            
+            services.AddJwtAuthentication(config);
+            services.AddUaaDatabases(config);
+            services.AddGroceryDatabases(config);
             
             var containerBuilder = new ContainerBuilder();
             

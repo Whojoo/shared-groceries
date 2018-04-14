@@ -4,7 +4,6 @@
  using SharedGrocery.Common.Util;
  using SharedGrocery.Uaa.Api.Service;
  using SharedGrocery.Uaa.Rest.Filters;
-using SharedGrocery.Uaa.Service;
 
 namespace SharedGrocery.Uaa.Rest
 {

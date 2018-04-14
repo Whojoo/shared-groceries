@@ -9,7 +9,7 @@ namespace SharedGrocery.Common.Config
 {
     public static class OAuthConfig
     {
-        public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static void AddJwtAuthentication(this IServiceCollection services, Config configuration)
         {
             services.AddAuthentication(options =>
             {

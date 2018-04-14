@@ -12,8 +12,6 @@ namespace SharedGrocery.Uaa.DI
     {
         public static void RegisterModules(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterModule<UaaConfigurationModule>();
-            
             containerBuilder.RegisterType<UserService>().As<IUserService>();
             containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
             containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
