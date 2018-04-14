@@ -8,7 +8,6 @@ namespace SharedGrocery.Common.DI
     {
         public static void RegisterModules(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterModule<CommonConfigurationModule>();
             containerBuilder.RegisterType<Clock>().As<IClock>();
         }
     }

@@ -1,7 +1,7 @@
 ﻿﻿using System.Threading.Tasks;
- using JWT.Algorithms;
  using JWT.Builder;
  using Microsoft.Extensions.Logging;
+ using Microsoft.Extensions.Options;
  using SharedGrocery.Common.Api.Util;
  using SharedGrocery.Common.Config;
  using SharedGrocery.Common.Util;
@@ -21,13 +21,13 @@ namespace SharedGrocery.Uaa.Service
         private readonly IClock _clock;
 
         public AuthenticationService(ILogger<AuthenticationService> logger, IUserService userService,
-            ApiConfig apiConfig, IExternalIdUtil externalIdUtil, IClock clock)
+            IOptions<Common.Config.Config> config, IExternalIdUtil externalIdUtil, IClock clock)
         {
             _logger = logger;
             _userService = userService;
             _externalIdUtil = externalIdUtil;
             _clock = clock;
-            _apiConfig = apiConfig;
+            _apiConfig = config.Value.SharedGroceries.Api;
         }
 
         public async Task<string> GenerateJwtFromGoogleToken(string idToken)
