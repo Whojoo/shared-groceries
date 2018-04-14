@@ -23,7 +23,7 @@ services:
       - uaa-data:/var/lib/postgresql/data
 
   config-server:
-    image: hyness/spring-cloud-config-server:${CONFG_SERVER_TAG}
+    image: hyness/spring-cloud-config-server:${CONIFG_SERVER_TAG}
     env_file:
       - config-server.env
 
