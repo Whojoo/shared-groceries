@@ -2,7 +2,7 @@
 
 ## Build&Run
 
-You need a config-server.env file in order to use the config server.
+You need a `config-server.env` file in order to use the config server.
 
 Build the `whojoo/grocery-service` image of the grocery-service.
 
@@ -14,7 +14,7 @@ To see and follow the logs of a service `docker-compose logs -t -f grocery-servi
 
 ## Config server
 
-The current build uses a Spring Cloud Config server. The files are on a private repository. In order to use the config server you first need access to the config-server.env file.
+The current build uses a Spring Cloud Config server. The files are on a private repository. In order to use the config server you first need access to the `config-server.env` file.
 
 You can fake the file by setting it up like this.
 
@@ -32,7 +32,7 @@ Debugging with docker is done through Visual Studio Code and has the following r
 
 - [Visual Studio Code](https://code.visualstudio.com/)
 - launch.json file in .vscode folder
-- config-server.env file mentioned above
+- `config-server.env` file mentioned above
 
 You need a .vscode folder in the root of the project containing the following launch.json file.
 
@@ -61,6 +61,7 @@ You need a .vscode folder in the root of the project containing the following la
         }
     ]
 }
+```
 
 `docker-compose up -d` will start all the required services. The application won't be started until the debugger is started. And all the logging is done through the debugger so `docker-compose logs grocery-service` won't show anything.
 
