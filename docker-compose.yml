@@ -6,20 +6,24 @@ services:
     links:
       - grocery-data
       - uaa-data
-    env_file:
-      - secrets.env
+      - config-server
+    depends_on:
+      - config-server
+      - grocery-data
+      - uaa-data
   
   grocery-data:
-    image: whojoo/grocery-data-postgres:${GROCERY_DATA_POSTGRES_TAG}
+    image: postgres:${GROCERY_DATA_POSTGRES_TAG}
     volumes:
       - grocery-data:/var/lib/postgresql/data
 
   uaa-data:
-    image: whojoo/uaa-data-postgres:${UAA_DATA_POSTGRES_TAG}
+    image: postgres:${UAA_DATA_POSTGRES_TAG}
     volumes:
       - uaa-data:/var/lib/postgresql/data
 
   config-server:
+<<<<<<< HEAD
     image: hyness/spring-cloud-config-server:${CONFG_SERVER_TAG}
     volumes:
       - ./config-server:/config
@@ -27,6 +31,11 @@ services:
       - config-server.env
     ports:
       - "8888:8888"
+=======
+    image: hyness/spring-cloud-config-server:${CONFIG_SERVER_TAG}
+    env_file:
+      - config-server.env
+>>>>>>> develop
 
 volumes:
   grocery-data:

@@ -22,6 +22,7 @@
     <PackageReference Include="System.Reactive.Core" Version="4.0.0-preview00001" />
     <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview00001" />
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0-preview00001" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />

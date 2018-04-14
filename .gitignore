@@ -8,3 +8,5 @@ config-server/*
 config-server.yml
 
 !config-server/README.md
+SharedGrocery.sln.DotSettings.user
+
